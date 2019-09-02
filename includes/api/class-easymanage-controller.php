@@ -675,7 +675,7 @@ class Easymanage_API_Controller extends WC_REST_Controller{
 
 		$out = [];
 		foreach($emails as $email) {
-			$out[] = [$email->email_address];
+			$out[] = $email->email_address;
 		}
 
 		return $out;
