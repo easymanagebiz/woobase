@@ -1,9 +1,9 @@
 <?php
 /*
- * Plugin Name: Easymange
+ * Plugin Name: Easymanage
  * Plugin URI:  https://easymanage.biz
  * Description: Integration module for Woocommerce and Easymanage app(Google drive spreadsheet)
- * Author:      Easymange Team
+ * Author:      Easymanage Team
  * Version:     1.0.1
  * Text Domain: easymanage
  * Domain Path: /languages/
