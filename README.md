@@ -2,7 +2,7 @@
 
 Woocommerce module for Easymanage app
 
-<strong>Recommended version Magento 2.3</strong>
+<strong>Recommended version Woocommerce 3.6</strong>
 
 Everybody knows Google Drive power and how to work with documents there, eh?
 If you dont know about its not a problem, check this link <a href="https://en.wikipedia.org/wiki/Google_Drive" target="_blank">WIKI</a>
