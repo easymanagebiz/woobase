@@ -9,7 +9,7 @@
  * Domain Path: /languages/
  *
  * WC requires at least: 	3.0.0
- * WC tested up to: 3.6.5
+ * WC tested up to: 3.7.0
  *
  * Copyright: © 2019 easymanage, (easymanage.biz@gmail.com)
  *
