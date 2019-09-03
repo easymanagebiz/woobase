@@ -162,7 +162,7 @@ class Easymanage_Export_Products extends WC_Product_CSV_Exporter {
   }
 
   protected function processPriceField($val) {
-    return number_format($val, 2, ',', '');
+    return number_format($val, 2, '.', '');
   }
 
 }
