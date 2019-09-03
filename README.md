@@ -27,7 +27,7 @@ In search field type "Easymanage", find add-on and press "+ Free" button
 </div>
 Go through OAuth process, and you are done.
 <br>
-More info about <a href="https://easymanage.biz/index.php/woocommerce/" target="_blank">here</a>
+More info about <a href="https://easymanage.biz/index.php/woocommerce-woo/" target="_blank">here</a>
 <br>
 Youtube videos - https://www.youtube.com/channel/UCFYmDRJqQU8J6dFUxlRV1zg
 <br>
