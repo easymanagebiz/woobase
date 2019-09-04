@@ -425,8 +425,9 @@ class Easymanage_API_Controller extends WC_REST_Controller{
 
 			$data = $this->_helper->getRequestJsonData();
 
-			$subject = !empty($data['subject']) ? $data['subject'] : null;
-	    $content = !empty($data['content']) ? $data['content'] : null;
+			//prepare data template - sanitize and rich html!
+			$subject = !empty($data['subject']) ? sanitize_text_field($data['subject']) : null;
+	    $content = !empty($data['content']) ? $this->_helper->prepareHtmlOutput($data['content']) : null;
 
 	    $template_id = !empty($data['template_id']) ? $data['template_id'] : null;
 

@@ -8,6 +8,10 @@ if ( ! class_exists( 'WC_Product_CSV_Exporter', false ) ) {
   include_once WC_ABSPATH . 'includes/export/class-wc-product-csv-exporter.php';
 }
 
+if ( ! class_exists( 'Easymanage_Helper', false ) ) {
+  include_once WC_ABSPATH . 'includes/class-easymanage-helper.php';
+}
+
 class Easymanage_Export_Products extends WC_Product_CSV_Exporter {
 
 	const PRODUCTS_LIMIT = 1000;//to do make pagination on fetch G App Script
@@ -30,10 +34,13 @@ class Easymanage_Export_Products extends WC_Product_CSV_Exporter {
 
   protected $_categories = null;
 
+	protected $_helper;
+
   public function init($data) {
 		add_filter( "woocommerce_product_export_{$this->export_type}_query_args", array( $this, 'add_params'), 15, 2 );
     $headers = !empty($data['headers']) ? $data['headers'] : null;
 
+		$this->_helper = new Easymanage_Helper();
     if($headers) {
       $this->set_headers( $headers );
     }
@@ -148,12 +155,18 @@ class Easymanage_Export_Products extends WC_Product_CSV_Exporter {
         if(in_array($key, $this->_special_procces_fields)) {
           $val = $this->prepreValues($key, $val);
         }
+
+				$val = $this->sanitizeAndEscapingData($key, $val);
         $rowData[] = $val;
       }
       $outputRows[] = $rowData;
     }
     return $outputRows;
   }
+
+	protected function sanitizeAndEscapingData($key, $val) {
+		return $this->_helper->validateAndPrepareData( $key, $val );
+	}
 
   protected function prepreValues($nameField, $val) {
     if(in_array($nameField, $this->_price_fields )) {
