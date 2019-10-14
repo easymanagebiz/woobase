@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 class Easymanage_API_Controller extends WC_REST_Controller{
 
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.3';
 
   protected $namespace = 'easymanage';
 
@@ -160,7 +160,44 @@ class Easymanage_API_Controller extends WC_REST_Controller{
 
       )
     ));
+
+		/* triggers */
+		register_rest_route( $this->namespace, $this->rest_base . '/triggers', array(
+      'methods'  => WP_REST_Server::CREATABLE,
+			'callback' => array( $this, 'triggers' ),
+			'args'     => array(
+
+      )
+    ));
   }
+
+	public function triggers() {
+		if(!$this->_helper->checkIsAdmin()) {
+			return $this->_response->error($this->getErrorNotAuthMessage());
+		}
+		try {
+
+			$triggerClass = new Easymanage_Trigger();
+			$dataTriggersUpdate   = $this->_helper->getRequestJsonData();
+				//var_dump( $dataTriggersUpdate ); die();
+			if($dataTriggersUpdate && is_array($dataTriggersUpdate)) {
+				foreach($dataTriggersUpdate as $unique_id => $error) {
+					$triggerClass->updateTriggerStatus($unique_id, $error);
+				}
+			}
+
+			$triggers = $triggerClass->getTriggersToRun();
+			if($triggers && is_array($triggers)) {
+				foreach($triggers as $_trigger) {
+					$triggerClass->updateTriggerRundate($_trigger->unique_id);
+				}
+			}
+			return $this->_response->response(($triggers ? $triggers : []),true);
+
+		}catch(Exception $e) {
+			return $this->_response->error($e->getMessage());
+		}
+	}
 
 	public function import() {
 		if(!$this->_helper->checkIsAdmin()) {

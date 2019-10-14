@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'Easymanage_Unsubscribers_Init' ) ) {
 
  class Easymanage_Unsubscribers_Init {

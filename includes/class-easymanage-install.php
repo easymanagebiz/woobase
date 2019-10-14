@@ -19,12 +19,15 @@ if ( ! class_exists( 'Easymanage_Install' ) ) {
 		protected $_unsubscribers_table  = 'easymanage_unsubscribers';
 		protected $_email_table          = 'easymanage_emails';
 		protected $_email_template_table = 'easymanage_email_template';
+		protected $_triggers_table = 'easymanage_triggers';
 
     public function __construct() {
       add_action( 'init', array( $this, 'check_version' ), 5 );
     }
 
     public function check_version() {
+
+			$_flagUpdateVersion = false;
 
       $_version = get_option( self::EASYMANAGE_OPTION_VERSION );
 
@@ -33,7 +36,41 @@ if ( ! class_exists( 'Easymanage_Install' ) ) {
 				do_action( self::EASYMANAGE_UPDATED_ACTION );
 			}
 
+			if(version_compare ($_version, '1.0.3', '<' )) {
+				$this->createTriggerTable();
+				$_version = '1.0.3';
+				$_flagUpdateVersion = true;
+			}
+
+			if($_flagUpdateVersion) {
+				self::set_install_date();
+				self::update_version();
+			}
     }
+
+		protected function createTriggerTable() {
+
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			global $wpdb;
+      $charset_collate = $wpdb->get_charset_collate();
+      $table_name = $wpdb->prefix . $this->_triggers_table;
+			$sql = " DROP TABLE IF EXISTS " . $table_name . ";
+        CREATE TABLE " . $table_name . " (
+        `trigger_id` INT( 12 ) NOT NULL AUTO_INCREMENT ,
+        `unique_id` VARCHAR(255) NOT NULL ,
+        `created_date` DATETIME,
+        `run_date` DATETIME,
+				`type` TEXT NOT NULL default '',
+				`data` TEXT NOT NULL default '',
+				`error` TEXT NOT NULL default '',
+				`status` TINYINT(1) default 0,
+        PRIMARY KEY ( `trigger_id` )
+        )ENGINE=InnoDB DEFAULT CHARSET={$charset_collate};
+      ";
+
+			//status //0 - not run, 1 - run, 2 - completed
+      dbDelta( $sql );
+		}
 
     public function install() {
 

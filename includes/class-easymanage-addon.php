@@ -25,6 +25,11 @@ class Easymanage_Addon {
   const UI_TYPE_FORM = 'form';
   const UI_TYPE_STORES = 'stores';
   const UI_TYPE_CATEGORIES = 'categories';
+	const UI_TYPE_HTML = 'html';
+	const UI_TYPE_LINK = 'link';
+	const UI_TYPE_FROMTO   = 'fromto';
+	const UI_TYPE_SELECT   = 'select';
+	const UI_TYPE_CALENDAR = 'calendar';
 
   /* menu classes */
   const UI_MENU_CLASS_ADD_MORE_GRID  = 'add-more-grids';

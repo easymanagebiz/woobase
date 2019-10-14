@@ -4,12 +4,12 @@
  * Plugin URI:  https://easymanage.biz
  * Description: Integration module for Woocommerce and Easymanage app(Google drive spreadsheet)
  * Author:      Easymanage Team
- * Version:     1.0.2
+ * Version:     1.0.3
  * Text Domain: easymanage
  * Domain Path: /languages/
  *
  * WC requires at least: 	3.6.0
- * WC tested up to: 3.7.0
+ * WC tested up to: 3.7.1
  *
  * Copyright: © 2019 easymanage, (easymanage.biz@gmail.com)
  *
@@ -27,7 +27,7 @@
 
     protected static $_instance = null;
 
-    public static $version = '1.0.1';
+    public static $version = '1.0.3';
 
     public static $required_woo = '3.0.0';
 

@@ -5,7 +5,7 @@ Tags: woocommerce, import products, email, export products, manage products, exp
 Requires at least: 5.2.0
 Tested up to: 5.2.1
 Requires PHP: 5.6.20
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -70,6 +70,12 @@ Yes, it's free to try ;-) It's also free for use on any numbers of websites, and
 * Clean email template HTML with unexpected tags or attributes
 * Sanitize email template subject
 * Prepare products data output with type
+
+== 1.0.3 ==
+* Add trigger table setup
+* Trigger REST endpoint URL
+* Create triggers insert row
+* UI component type HTML, link, select, calendar
 
 == Screenshots ==
 
