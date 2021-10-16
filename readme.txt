@@ -3,9 +3,9 @@ Contributors: easymanagebiz
 Donate link: https://easymanage.biz/index.php/donate/
 Tags: woocommerce, import products, email, export products, manage products, export customers, Google Sheet, Google App Sript, woocommerce to google sheet
 Requires at least: 5.2.0
-Tested up to: 5.2.1
+Tested up to: 5.7.2
 Requires PHP: 5.6.20
-Stable tag: 1.0.3
+Stable tag: 1.0.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,6 +76,12 @@ Yes, it's free to try ;-) It's also free for use on any numbers of websites, and
 * Trigger REST endpoint URL
 * Create triggers insert row
 * UI component type HTML, link, select, calendar
+
+== 1.0.3.1 ==
+* Add Polylang Woocommerce module support
+* Change get sku from csv row method
+* Logo update
+
 
 == Screenshots ==
 

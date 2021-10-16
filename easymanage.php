@@ -27,7 +27,7 @@
 
     protected static $_instance = null;
 
-    public static $version = '1.0.3';
+    public static $version = '1.0.3.1';
 
     public static $required_woo = '3.0.0';
 
