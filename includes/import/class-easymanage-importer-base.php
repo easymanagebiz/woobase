@@ -28,9 +28,17 @@ class Easymanage_Importer_Base{
 
 		const DEFAULT_REINDEX = 2;
 
+		const LANGUAGE_COLUMN_NAME = 'language';
+
+		const SKU_COLUMN_NAME      = 'sku';
+
     protected $_processProductsPerCall = 20;
 
     protected $_errors;
+
+		protected $languageCodeIndex;
+
+		protected $skuIndex;
 
     protected $_logs;
 
@@ -39,6 +47,8 @@ class Easymanage_Importer_Base{
     protected $_updateRows = [];
 
     protected $_createRows = [];
+
+		protected $_createSkus = [];
 
     protected $_baseData = null;
 
@@ -118,10 +128,10 @@ class Easymanage_Importer_Base{
 
       $this->_baseData = $data;
       $this->generateRevisionId();
-      $this->createRowsData();
       $this->prepareHeaders();
-      if($validateNotFound && count($this->_createRows)) {
-        $this->_notFoundSkus = array_keys($this->_createRows);
+      $this->createRowsData();
+      if($validateNotFound && count($this->_createSkus)) {
+        $this->_notFoundSkus = $this->_createSkus;
         return $this->_result();
       }
       $this->createFileRevision();
@@ -316,27 +326,75 @@ class Easymanage_Importer_Base{
     }
 
     protected function prepareHeaders() {
-      $_headersData = $this->_baseData['headers'];
-      foreach($_headersData as $_header) {
-        $this->_csvHeaderArr[] = $_header['name'];
+			$this->languageCodeIndex = null;
+			$this->skuIndex = null;
+			$_headersData = $this->_baseData['headers'];
+      foreach($_headersData as $index => $_header) {
+				$this->_csvHeaderArr[] = $_header['name'];
+				if($_header['name'] == self::LANGUAGE_COLUMN_NAME) {
+						$this->languageCodeIndex = $index;
+				}
+				if($_header['name'] == self::SKU_COLUMN_NAME) {
+						$this->skuIndex = $index;
+				}
       }
     }
 
     protected function createRowsData() {
       $_productsData = $this->_baseData['products'];
-      foreach($_productsData as $sku=>$_productRow) {
-        if($this->productExists($sku)) {
-          $this->_updateRows[$sku] = $_productRow;
+      foreach($_productsData as $index => $_productRow) {
+				$sku  = $this->getSkuFromRow($_productRow);
+				$lang = $this->getLanguageFromRow($_productRow);
+        if($this->productExists($sku, $lang)) {
+          $this->_updateRows[] = $_productRow;
         }else{
-          $this->_createRows[$sku] = $_productRow;
+          $this->_createRows[] = $_productRow;
+					$this->_createSkus[] = $sku;
         }
       }
     }
 
-    protected function productExists($sku) {
+		protected function getSkuFromRow($_productRow)
+		{
+			if($this->skuIndex == null){
+				return $_productRow[0];
+			}
+			return !empty( $_productRow[$this->skuIndex] ) ? $_productRow[$this->skuIndex] : $_productRow[0];
+		}
+
+		protected function getLanguageFromRow($_productRow){
+			if($this->languageCodeIndex == null){
+				return;
+			}
+
+			return !empty($_productRow[$this->languageCodeIndex]) ? $_productRow[$this->languageCodeIndex] : null;
+		}
+
+    protected function productExists($sku, $lang = null) {
       $productId = wc_get_product_id_by_sku( $sku );
-      return ($productId ? true : false);
-    }
+
+			if($lang == null || !$productId) {
+				return ($productId ? true : false);
+			}
+			$currentProductLang = $this->getLangTaxonomyValue($productId);
+
+			return ($currentProductLang == $lang);
+		}
+
+		protected function getLangTaxonomyValue($productId)
+		{
+				$terms = get_the_terms( $productId, 'language' );
+				if(empty($terms) || empty($terms[0])) {
+					return '';
+				}
+
+				$objTaxonomy = $terms[0];
+				if(empty($objTaxonomy->slug)) {
+					return '';
+				}
+
+				return $objTaxonomy->slug;
+		}
 
     protected function generateRevisionId() {
       $this->_revisionId = uniqid();
