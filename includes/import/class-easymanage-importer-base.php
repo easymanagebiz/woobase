@@ -371,14 +371,53 @@ class Easymanage_Importer_Base{
 		}
 
     protected function productExists($sku, $lang = null) {
-      $productId = wc_get_product_id_by_sku( $sku );
 
-			if($lang == null || !$productId) {
-				return ($productId ? true : false);
+			if($lang == null) {
+				$productId = wc_get_product_id_by_sku( $sku );
+			}else{
+				$productId = $this->getProductByLangAndSku($sku, $lang);
 			}
-			$currentProductLang = $this->getLangTaxonomyValue($productId);
 
-			return ($currentProductLang == $lang);
+			return $productId;
+
+			/*
+				if($lang == null || !$productId) {
+					return ($productId ? true : false);
+				}
+				$currentProductLang = $this->getLangTaxonomyValue($productId);
+
+				return ($currentProductLang == $lang);
+			*/
+		}
+
+		protected function getProductByLangAndSku($sku, $lang)
+		{
+			$cc_args = array(
+			    'posts_per_page'   => -1,
+			    'post_type'        => 'product',
+			    'meta_key'         => '_sku',
+			    'meta_value'       => $sku
+			);
+			$cc_query = new WP_Query( $cc_args );
+			$products = $cc_query->posts;
+			$filledProductIds = [];
+
+			foreach($products as $product) {
+
+				if($product->post_status != 'publish') {
+					continue;
+				}
+
+				if(in_array($product->ID, $filledProductIds)) {
+					continue;
+				}
+
+				$currentLang = $this->getLangTaxonomyValue($product->ID);
+				if($currentLang == $lang) {
+					return $product->ID;
+				}
+				$filledProductIds[] = $product->ID;
+			}
 		}
 
 		protected function getLangTaxonomyValue($productId)
