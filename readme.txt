@@ -1,11 +1,11 @@
 === Easymanage ===
 Contributors: easymanagebiz
 Donate link: https://easymanage.biz/index.php/donate/
-Tags: woocommerce, import products, email, export products, manage products, export customers, Google Sheet, Google App Sript, woocommerce to google sheet
+Tags: Google Sheet, woocommerce, import products, email, export products, manage products, export customers, Google App Sript, woocommerce to google sheet
 Requires at least: 5.2.0
 Tested up to: 5.7.2
-Requires PHP: 5.6.20
-Stable tag: 1.0.3.1
+Requires PHP: 7.0
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,6 +81,16 @@ Yes, it's free to try ;-) It's also free for use on any numbers of websites, and
 * Add Polylang Woocommerce module support
 * Change get sku from csv row method
 * Logo update
+
+== 1.0.4 ==
+* Polylang compatible get Product ID by SKU
+
+== 1.0.5 ==
+* Paginate while fetching products(500 per one query)
+* About extension - admin page
+* Fix meta: values export
+* Fix line-break chars in description
+* Add update / create mode from spreadsheet
 
 
 == Screenshots ==

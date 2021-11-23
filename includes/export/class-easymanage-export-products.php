@@ -14,7 +14,7 @@ if ( ! class_exists( 'Easymanage_Helper', false ) ) {
 
 class Easymanage_Export_Products extends WC_Product_CSV_Exporter {
 
-	const PRODUCTS_LIMIT = 1000;//to do make pagination on fetch G App Script
+	const PRODUCTS_LIMIT = 500;
 
   protected $_special_procces_fields = [
     'price',
@@ -27,6 +27,8 @@ class Easymanage_Export_Products extends WC_Product_CSV_Exporter {
     'regular_price',
     'sale_price'
   ];
+
+	protected $_currentPage = 0;
 
 	protected $_exportHeaders = [];
 
@@ -62,6 +64,7 @@ class Easymanage_Export_Products extends WC_Product_CSV_Exporter {
 		}
 		if($this->metaEnabled()) {
 			$columns_to_export[] = 'attributes';
+			$this->enable_meta_export = true;
 		}
 		$this->set_columns_to_export($columns_to_export);
     $this->set_column_names($columns);
@@ -111,6 +114,9 @@ class Easymanage_Export_Products extends WC_Product_CSV_Exporter {
     if(!empty($data['params'])) {
       $str = parse_str($data['params'], $filterParams);
     }
+		if(!empty($data['paginate']) && !empty($data['paginate']['page'])) {
+			$this->_currentPage = $data['paginate']['page'];
+		}
     $categories = !empty($filterParams['from_categories']) ? $filterParams['from_categories'] : null;
     if($categories && !(count($categories) == 1 && $categories[0] == '')) {
       $this->setCategories( $categories );
@@ -121,6 +127,31 @@ class Easymanage_Export_Products extends WC_Product_CSV_Exporter {
 
 	public function get_limit() {
 		return self::PRODUCTS_LIMIT;
+	}
+
+	public function get_page() {
+		return $this->_currentPage + 1;
+	}
+
+	public function get_total_count() {
+		return $this->total_rows;
+	}
+
+	public function get_paginate($data, $found_rows) {
+
+		$paginate = !empty($data['paginate']) ? $data['paginate'] : null;
+		if(!$paginate) {
+      $paginate = [
+        'all' => $this->get_total_count(),
+        'count' => count($found_rows),
+        'limit' => self::PRODUCTS_LIMIT
+      ];
+    }else{
+      $paginate['count'] = $paginate['count'] + count($found_rows);
+    }
+
+		return $paginate;
+
 	}
 
   public function search_products($search) {

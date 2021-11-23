@@ -32,6 +32,10 @@ class Easymanage_Importer_Base{
 
 		const SKU_COLUMN_NAME      = 'sku';
 
+		const SYNC_MODE_CREATE     = 'create';
+
+		const SYNC_MODE_UPDATE     = 'update';
+
     protected $_processProductsPerCall = 20;
 
     protected $_errors;
@@ -59,6 +63,8 @@ class Easymanage_Importer_Base{
     protected $_flagStartProcess = false;
 
     protected $_nextStepFlag = false;
+
+		protected $_syncMode = '';
 
 		protected $lockData;
 
@@ -124,9 +130,10 @@ class Easymanage_Importer_Base{
 			return $this->lockData;
 		}
 
-    public function prepareData($data, $validateNotFound = false) {
+    public function prepareData($data, $validateNotFound = false, $syncMode = '') {
 
       $this->_baseData = $data;
+			$this->_syncMode  = $syncMode;
       $this->generateRevisionId();
       $this->prepareHeaders();
       $this->createRowsData();
@@ -283,6 +290,10 @@ class Easymanage_Importer_Base{
       $headers = $headersDef ? $headersDef : $this->_csvHeaderArr;
       fputcsv($file, $headers);
       foreach ($data as $line){
+					foreach($line as $index => $value) {
+						$value = str_replace(array("\r", "\n"), '', $value);
+						$line[$index] = $value;
+					}
           fputcsv($file, $line);
       }
       fclose($file);
@@ -342,15 +353,17 @@ class Easymanage_Importer_Base{
 
     protected function createRowsData() {
       $_productsData = $this->_baseData['products'];
+
       foreach($_productsData as $index => $_productRow) {
 				$sku  = $this->getSkuFromRow($_productRow);
 				$lang = $this->getLanguageFromRow($_productRow);
-        if($this->productExists($sku, $lang)) {
+				$productExists = $this->productExists($sku, $lang);
+        if($productExists && ($this->_syncMode == self::SYNC_MODE_UPDATE)) {
           $this->_updateRows[] = $_productRow;
-        }else{
+				}else if(!$productExists && $this->_syncMode == self::SYNC_MODE_CREATE){
           $this->_createRows[] = $_productRow;
 					$this->_createSkus[] = $sku;
-        }
+				}
       }
     }
 

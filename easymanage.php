@@ -4,7 +4,7 @@
  * Plugin URI:  https://easymanage.biz
  * Description: Integration module for Woocommerce and Easymanage app(Google drive spreadsheet)
  * Author:      Easymanage Team
- * Version:     1.0.3
+ * Version:     1.0.5
  * Text Domain: easymanage
  * Domain Path: /languages/
  *
@@ -27,7 +27,7 @@
 
     protected static $_instance = null;
 
-    public static $version = '1.0.3.1';
+    public static $version = '1.0.5';
 
     public static $required_woo = '3.0.0';
 
@@ -40,15 +40,18 @@
 
     public function __construct() {
       $this->setup_constants();
-			$this->admin_includes();
       add_action( 'init', array( $this, 'includes' ), 12 );
+			$this->admin_includes();
 		}
 
     public function setup_constants() {
-			$this->define('EASYMANAGE_VERSION', self::$version);
+
+      $this->define('EASYMANAGE_PLUGIN', plugin_basename(__FILE__));
+      $this->define('EASYMANAGE_VERSION', self::$version);
 			$this->define('EASYMANAGE_FILE_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
       $this->define('EASYMANAGE_TEMPLATE_PATH', EASYMANAGE_FILE_PATH . '/templates//');
-		}
+
+    }
 
     private function define( $name, $value ) {
 			if ( ! defined( $name ) ) {
@@ -67,6 +70,7 @@
     public function admin_includes() {
 			if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 				require_once( EASYMANAGE_FILE_PATH . '/includes/class-easymanage-install.php' );
+  			require_once( EASYMANAGE_FILE_PATH . '/includes/class-easymanage-admin.php' );
 			}
 		}
 

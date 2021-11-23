@@ -4,8 +4,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 class Easymanage_API_Controller extends WC_REST_Controller{
 
-	const VERSION = '1.0.3';
-
   protected $namespace = 'easymanage';
 
   protected $_version = 'v1';
@@ -204,10 +202,16 @@ class Easymanage_API_Controller extends WC_REST_Controller{
 			return $this->_response->error($this->getErrorNotAuthMessage());
 		}
 		try {
+
 			$data   = $this->_helper->getRequestJsonData();
+
+			$syncMode = !empty($data['extra']) && !empty($data['extra']['save_mode']) ? $data['extra']['save_mode'] : null;
+			//var_dump($syncMode);
+			//die();
+
 			include_once EASYMANAGE_FILE_PATH . '/includes/import/class-easymanage-importer.php';
 			$importer = new Easymanage_Importer();
-			$result = $importer->prepareSaveData($data);
+			$result = $importer->prepareSaveData($data, false, $syncMode);
 
 			return $this->_response->response([
         'status' => 'ok',
@@ -298,8 +302,9 @@ class Easymanage_API_Controller extends WC_REST_Controller{
 
 			return $this->_response->response([
 				'postValues' => $data,
-				'totalCount' => $productRows ? count($productRows) : 0,
-				'dataProducts' => $productRows
+				'totalCount' => $exporter->get_total_count(),//$productRows ? count($productRows) : 0,
+				'dataProducts' => $productRows,
+				'paginate'     => $exporter->get_paginate($data, $productRows),
 			], true);
 
 		}catch(Exception $e) {
@@ -589,7 +594,7 @@ class Easymanage_API_Controller extends WC_REST_Controller{
 		do_action( 'easymanage_addons', Easymanage_Addon::getInstance() );
 
 		return $this->_response->response([
-			'version' => self::VERSION,
+			'version' => EASYMANAGE_VERSION,
 			'addons' => Easymanage_Addon::getInstance()->getAddons()
 		]);
 	}

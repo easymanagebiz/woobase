@@ -24,8 +24,8 @@ class Easymanage_Importer extends WC_Product_CSV_Importer{
       $this->_importerBase = new Easymanage_Importer_Base();
     }
 
-    public function prepareSaveData($data, $validateNotFound = false){
-      return $this->_importerBase->prepareData( $data, $validateNotFound );
+    public function prepareSaveData($data, $validateNotFound = false, $syncMode = ''){
+      return $this->_importerBase->prepareData( $data, $validateNotFound, $syncMode );
     }
 
     public function processSaveData($data) {

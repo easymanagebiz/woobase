@@ -1,0 +1,63 @@
+.easymanage-container{
+  display: flex;
+  align-items: flex-start;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
+  background-color: #fff;
+  min-height: 0;
+  padding: 20px;
+  margin-bottom: 15px;
+  margin-right: 7px;
+}
+
+.easymanage-video-container{
+  display: inline-block;
+  width: auto;
+  width:50%;
+  min-width: 560px;
+}
+
+.easymanage-container h3{
+  margin: -20px -20px 0;
+  padding: 1em;
+  border-bottom: 1px solid #ccc;
+  background-color: #fdfdfd;
+  font-size: 1.4em;
+  margin-bottom: 1rem;
+}
+
+.easymanage-container .button{
+  background: #2271b1;
+  border-color: #2271b1;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: none;
+  font-size: 1.5rem;
+}
+
+.easymanage-install-container{
+    display: inline-block;
+    margin-left:3rem;
+    margin-top:7rem;
+}
+
+.easymanage-plugins-container{
+  width:100%;
+  clear:both;
+  margin-top:1rem;
+}
+
+.easymanage-plugin{
+  width:300px;
+  display: inline-block;
+}
+
+.easymanage-plugin a{
+  display: block;
+  padding:10px;
+  border: 1px solid silver;
+  text-align: center;
+}
+
+.easymanage-plugin img{
+  max-width:100%;
+}
