@@ -4,6 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 class Easymanage_API_Controller extends WC_REST_Controller{
 
+
+	const SYNC_MODE_UPDATE = 'update';
+
   protected $namespace = 'easymanage';
 
   protected $_version = 'v1';
@@ -205,7 +208,7 @@ class Easymanage_API_Controller extends WC_REST_Controller{
 
 			$data   = $this->_helper->getRequestJsonData();
 
-			$syncMode = !empty($data['extra']) && !empty($data['extra']['save_mode']) ? $data['extra']['save_mode'] : null;
+			$syncMode = !empty($data['extra']) && !empty($data['extra']['save_mode']) ? $data['extra']['save_mode'] : self::SYNC_MODE_UPDATE;
 			//var_dump($syncMode);
 			//die();
 
@@ -238,7 +241,7 @@ class Easymanage_API_Controller extends WC_REST_Controller{
 			$data   = $this->_helper->getRequestJsonData();
 			include_once EASYMANAGE_FILE_PATH . '/includes/import/class-easymanage-importer.php';
 			$importer = new Easymanage_Importer();
-			$result = $importer->prepareSaveData($data, true);
+			$result = $importer->prepareSaveData($data, true, self::SYNC_MODE_UPDATE);
 
 			return $this->_response->response([
         'status' => 'ok',
